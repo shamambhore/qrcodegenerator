@@ -1,10 +1,9 @@
-from statistics import mode
 from django.shortcuts import render
 from django.conf import settings
 import qrcode
 import datetime
 from qrcode.image.styledpil import StyledPilImage
-from qrcode.image.styles.moduledrawers import VerticalBarsDrawer, RoundedModuleDrawer, CircleModuleDrawer
+from qrcode.image.styles.moduledrawers import VerticalBarsDrawer, RoundedModuleDrawer
 from qrcode.image.styles.colormasks import VerticalGradiantColorMask,SolidFillColorMask
 from PIL import Image, ImageDraw
 
@@ -51,24 +50,26 @@ def qr_generate(request):
         
         def style_eyes(img):
             img_size = img.size[0]
-            eye_size = 60 #default
-            quiet_zone = 285 #default
+            eye_size = 40 #default
+            quiet_zone = 310 #default
             mask = Image.new('L', img.size, 0)
             draw = ImageDraw.Draw(mask)
-            draw.rectangle((60, 60, 285, 285), fill=255)
-            draw.rectangle((img_size-285, 60, img_size-60, 285), fill=255)
-            draw.rectangle((60, img_size-285, 285, img_size-60), fill=255)
+            draw.rectangle((40, 40, 305, 305), fill=255)
+            draw.rectangle((img_size-305, 40, img_size-40, 305), fill=255)
+            draw.rectangle((40, img_size-305, 305, img_size-40), fill=255)
             return mask
     
-        QRcode = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H, border=2, box_size=30)
+        QRcode = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H, border=4, box_size=30)
         QRcode.add_data(data)
         QRcode.make()
         # embeded_img= Image.open("E:\qrgenerator\qrcodegenerator\images\qrcodedesign.jpeg")
-        qr_eyes_img = QRcode.make_image(image_factory=StyledPilImage,\
-                                        module_drawer=RoundedModuleDrawer(radius_ratio=1),\
-                                        color_mask=SolidFillColorMask((255,255,255),(255,0,0)),\
-                                        eye_drawer=RoundedModuleDrawer()
-        )
+        # qr_eyes_img = QRcode.make_image(image_factory=StyledPilImage,\
+        #                                 module_drawer=RoundedModuleDrawer(radius_ratio=1),\
+        #                                 color_mask=SolidFillColorMask((255,255,255),(255,0,0)),\
+        #                                 eye_drawer=RoundedModuleDrawer()
+        # )
+        qr_eyes_img = Image.open("E:\qrgenerator\qrcodegenerator\images\qrcodedesign.png").convert("RGB")
+        # qr_eyes_img.make_image()
         QRimg = QRcode.make_image(image_factory=StyledPilImage,\
                                   module_drawer=VerticalBarsDrawer(),\
                                   color_mask=VerticalGradiantColorMask(back_color=(255,255,255),top_color=(155,38,182),bottom_color=(255,0,0)),\
